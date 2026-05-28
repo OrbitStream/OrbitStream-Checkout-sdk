@@ -2,22 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stellar Checkout Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrbitStream — Basic Checkout</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 2rem; }
+    h1 { color: #7c3aed; margin-bottom: 0.5rem; }
+    p.subtitle { color: #888; margin-bottom: 2rem; }
+    .card { background: #12121a; border: 1px solid #1e1e2e; border-radius: 12px; padding: 2rem; max-width: 480px; }
+    label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 0.25rem; }
+    input, select { width: 100%; padding: 0.75rem; border: 1px solid #2a2a3a; border-radius: 8px;
+      background: #1a1a28; color: #e0e0e0; font-size: 1rem; margin-bottom: 1rem; }
+    button { width: 100%; padding: 0.85rem; border: none; border-radius: 8px; font-size: 1rem;
+      font-weight: 600; cursor: pointer; background: #7c3aed; color: #fff; transition: background 0.2s; }
+    button:hover { background: #6d28d9; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #output { margin-top: 1.5rem; padding: 1rem; background: #0d0d14; border-radius: 8px;
+      font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+    .row { display: flex; gap: 1rem; }
+    .row > * { flex: 1; }
+  </style>
 </head>
 <body>
-  <h1>Stellar Checkout — Basic Integration</h1>
-  <button id="pay-btn">Pay $25 with USDC</button>
-  <pre id="output"></pre>
+  <h1>OrbitStream</h1>
+  <p class="subtitle">Accept Stellar payments in minutes</p>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" value="25.00" step="0.01" min="0">
+      </div>
+      <div>
+        <label for="asset">Asset</label>
+        <select id="asset">
+          <option value="USDC" selected>USDC</option>
+          <option value="EURC">EURC</option>
+          <option value="XLM">XLM</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="currency">Display Currency</label>
+    <select id="currency">
+      <option value="USD" selected>USD</option>
+      <option value="EUR">EUR</option>
+      <option value="ARS">ARS</option>
+      <option value="BRL">BRL</option>
+      <option value="NGN">NGN</option>
+    </select>
+
+    <button id="pay-btn">Create Checkout Session</button>
+
+    <div id="output">Waiting...</div>
+  </div>
 
   <script>
-    // In a real app, import from '@stellar-checkout/sdk'
-    // This example shows the API surface
-
     const API_KEY = 'sk_test_your_api_key_here';
     const API_URL = 'http://localhost:3001';
 
-    document.getElementById('pay-btn').addEventListener('click', async () => {
-      const output = document.getElementById('output');
+    const btn = document.getElementById('pay-btn');
+    const output = document.getElementById('output');
+
+    btn.addEventListener('click', async () => {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const asset = document.getElementById('asset').value;
+      const displayCurrency = document.getElementById('currency').value;
+
+      btn.disabled = true;
       output.textContent = 'Creating checkout session...';
 
       try {
@@ -28,20 +80,30 @@
             'Authorization': `Bearer ${API_KEY}`,
           },
           body: JSON.stringify({
-            amount: 25.00,
-            asset: 'USDC',
-            successUrl: 'https://example.com/success',
-            cancelUrl: 'https://example.com/cancel',
+            amount,
+            asset,
+            displayCurrency,
+            successUrl: `${window.location.origin}/success`,
+            cancelUrl: `${window.location.origin}/cancel`,
           }),
         });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || res.statusText);
+        }
 
         const session = await res.json();
         output.textContent = JSON.stringify(session, null, 2);
 
-        // Redirect customer to checkout page
-        window.location.href = session.url;
+        // Redirect customer to hosted checkout
+        if (session.url) {
+          window.location.href = session.url;
+        }
       } catch (err) {
         output.textContent = `Error: ${err.message}`;
+      } finally {
+        btn.disabled = false;
       }
     });
   </script>
