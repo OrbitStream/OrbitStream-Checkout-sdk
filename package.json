@@ -1,0 +1,16 @@
+{
+  "name": "@stellar-checkout/sdk",
+  "version": "0.1.0",
+  "description": "Stellar Checkout SDK — Stripe-like checkout for the Stellar network",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["stellar", "checkout", "payments", "sdk"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

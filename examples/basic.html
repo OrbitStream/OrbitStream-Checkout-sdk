@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stellar Checkout Example</title>
+</head>
+<body>
+  <h1>Stellar Checkout — Basic Integration</h1>
+  <button id="pay-btn">Pay $25 with USDC</button>
+  <pre id="output"></pre>
+
+  <script>
+    // In a real app, import from '@stellar-checkout/sdk'
+    // This example shows the API surface
+
+    const API_KEY = 'sk_test_your_api_key_here';
+    const API_URL = 'http://localhost:3001';
+
+    document.getElementById('pay-btn').addEventListener('click', async () => {
+      const output = document.getElementById('output');
+      output.textContent = 'Creating checkout session...';
+
+      try {
+        const res = await fetch(`${API_URL}/v1/checkout/sessions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`,
+          },
+          body: JSON.stringify({
+            amount: 25.00,
+            asset: 'USDC',
+            successUrl: 'https://example.com/success',
+            cancelUrl: 'https://example.com/cancel',
+          }),
+        });
+
+        const session = await res.json();
+        output.textContent = JSON.stringify(session, null, 2);
+
+        // Redirect customer to checkout page
+        window.location.href = session.url;
+      } catch (err) {
+        output.textContent = `Error: ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
