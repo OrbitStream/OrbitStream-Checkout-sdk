@@ -44,7 +44,7 @@ export class OrbitStream {
       throw new Error(`OrbitStream: failed to create session — ${err.message}`);
     }
 
-    return res.json();
+    return await res.json();
   }
 
   async getSession(sessionId: string): Promise<CheckoutSession> {
@@ -54,7 +54,7 @@ export class OrbitStream {
     if (!res.ok) {
       throw new Error('OrbitStream: session not found');
     }
-    return res.json();
+    return await res.json();
   }
 
   async cancelSession(sessionId: string): Promise<void> {
@@ -76,7 +76,7 @@ export class OrbitStream {
     if (!res.ok) {
       throw new Error('OrbitStream: payment not found for session');
     }
-    return res.json();
+    return await res.json();
   }
 
   // ── Payment Links ──
@@ -96,7 +96,7 @@ export class OrbitStream {
       throw new Error(`OrbitStream: failed to create payment link — ${err.message}`);
     }
 
-    return res.json();
+    return await res.json();
   }
 
   async getPaymentLink(linkId: string): Promise<PaymentLink> {
@@ -106,7 +106,7 @@ export class OrbitStream {
     if (!res.ok) {
       throw new Error('OrbitStream: payment link not found');
     }
-    return res.json();
+    return await res.json();
   }
 
   async listPaymentLinks(): Promise<PaymentLink[]> {
@@ -116,7 +116,7 @@ export class OrbitStream {
     if (!res.ok) {
       throw new Error('OrbitStream: failed to list payment links');
     }
-    return res.json();
+    return await res.json();
   }
 
   // ── Webhooks ──
@@ -136,7 +136,7 @@ export class OrbitStream {
       throw new Error(`OrbitStream: failed to create webhook — ${err.message}`);
     }
 
-    return res.json();
+    return await res.json();
   }
 
   async listWebhooks(): Promise<WebhookEndpoint[]> {
@@ -146,7 +146,7 @@ export class OrbitStream {
     if (!res.ok) {
       throw new Error('OrbitStream: failed to list webhooks');
     }
-    return res.json();
+    return await res.json();
   }
 
   async deleteWebhook(webhookId: string): Promise<void> {
