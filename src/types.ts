@@ -20,11 +20,9 @@ export interface CreateSessionParams {
   amount: number;
   asset: StellarAssetCode;
   assetIssuer?: string;
-  displayCurrency?: string; // fiat currency for display (e.g. "USD", "EUR", "ARS")
   successUrl?: string;
   cancelUrl?: string;
   metadata?: Record<string, unknown>;
-  expiresIn?: number; // seconds until session expires, default 1800 (30 min)
 }
 
 export interface CheckoutSession {
@@ -33,12 +31,9 @@ export interface CheckoutSession {
   amount: string;
   asset: string;
   displayAmount?: string;
-  displayCurrency?: string;
-  paymentAddress: string; // Stellar address to receive payment
-  memo?: string; // muxed memo for payment matching
-  status: 'pending' | 'paid' | 'expired' | 'cancelled';
+  memo?: string;
+  status: 'pending' | 'processing' | 'paid' | 'expired' | 'cancelled';
   expiresAt: string;
-  createdAt: string;
 }
 
 // ── Payments ──

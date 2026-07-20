@@ -31,11 +31,9 @@ export class OrbitStream {
         amount: params.amount,
         asset: params.asset,
         assetIssuer: params.assetIssuer,
-        displayCurrency: params.displayCurrency,
         successUrl: params.successUrl,
         cancelUrl: params.cancelUrl,
         metadata: params.metadata,
-        expiresIn: params.expiresIn,
       }),
     });
 
