@@ -16,6 +16,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check branch is up to date
+        if: github.event_name == 'pull_request'
+        run: |
+          if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }}; then
+            echo "::error::This branch is behind main. Please rebase your fork before opening a PR."
+            exit 1
+          fi
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
