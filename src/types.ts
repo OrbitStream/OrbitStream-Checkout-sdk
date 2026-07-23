@@ -3,6 +3,8 @@
 export interface OrbitStreamOptions {
   apiKey: string;
   baseUrl?: string;
+  timeout?: number;
+  maxRetries?: number;
 }
 
 // ── Supported Stellar Assets ──
